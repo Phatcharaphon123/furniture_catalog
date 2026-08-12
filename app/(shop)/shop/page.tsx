@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import axios from "axios";
 import { AiFillPicture } from "react-icons/ai";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+
 
 interface ProductImage {
   id: number;
@@ -30,7 +31,7 @@ interface Category {
   name: string;
 }
 
-export default function ShopPage() {
+function ShopContent(){
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState("");
@@ -195,5 +196,13 @@ export default function ShopPage() {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div>กำลังโหลดสินค้า...</div>}>
+      <ShopContent />
+    </Suspense>
   );
 }
