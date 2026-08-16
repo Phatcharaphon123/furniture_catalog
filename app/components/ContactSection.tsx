@@ -2,7 +2,7 @@ import { FaMapMarkerAlt, FaPhone, FaLine, FaClock } from "react-icons/fa";
 
 export default function ContactSection() {
   return (
-    <section className="bg-[#faf9f6] py-10">
+    <section id="contact" className="bg-[#faf9f6] py-10">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
           {/* ข้อมูลติดต่อ */}

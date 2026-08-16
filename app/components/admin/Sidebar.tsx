@@ -7,6 +7,8 @@ const menus = [
   { name: "Dashboard", href: "/admin" },
   { name: "Products", href: "/admin/products" },
   { name: "Categories", href: "/admin/category" },
+  { name: "Materials", href: "/admin/materials" },
+  { name: "Colors", href: "/admin/colors" },
   { name: "Orders", href: "/admin/order" },
   { name: "Users", href: "/admin/user" },
 ];

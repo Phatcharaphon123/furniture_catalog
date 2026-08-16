@@ -72,14 +72,14 @@ export default function ProductSection() {
         </div>
 
         {/* Products */}
-        <div className="max-h-[900px] overflow-y-auto pr-2">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+        <div className="overflow-x-auto pb-3">
+          <div className="grid grid-flow-col grid-rows-2 auto-cols-[280px] gap-5">
             {products.map((product) => (
-<Link
-  key={product.id}
-  href={`/shop/${product.id}`}
-  className="block cursor-pointer overflow-hidden rounded-[20px] border border-[#e8e5df] bg-white transition hover:-translate-y-1 hover:shadow-lg"
->
+              <Link
+                key={product.id}
+                href={`/shop/${product.id}`}
+                className="block cursor-pointer overflow-hidden rounded-[20px] border border-[#e8e5df] bg-white transition hover:-translate-y-1 hover:shadow-lg"
+              >
                 {/* Image */}
                 <div className="aspect-[1/0.78] overflow-hidden bg-gray-100">
                   {(() => {

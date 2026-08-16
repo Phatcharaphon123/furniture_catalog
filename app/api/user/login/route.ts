@@ -54,9 +54,12 @@ export async function POST(request: Request) {
         username: user.username,
         email: user.email,
         role: user.role,
+        profile_image: user.profile_image,
+        profile_image_public_id: user.profile_image_public_id,
       },
     });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ message: "Database Error" }, { status: 500 });
   }
 }

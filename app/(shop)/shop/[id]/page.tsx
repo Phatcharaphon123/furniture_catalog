@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { AiFillPicture } from "react-icons/ai";
 import Link from "next/link";
+import WishlistButton from "@/app/components/WishlistButton";
+import RecommendedProducts from "./RecommendedProducts";
+import Materials_colors from "./Materials_colors";
 
 interface ProductImage {
   id: number;
@@ -11,6 +14,21 @@ interface ProductImage {
   public_id: string;
   is_primary: boolean;
   sort_order: number;
+}
+
+interface ProductColor {
+  id: number;
+  name: string;
+  hex_code: string;
+  image_url: string | null;
+  price: number;
+}
+
+interface ProductMaterial {
+  id: number;
+  name: string;
+  image_url: string | null;
+  price: number;
 }
 
 interface Product {
@@ -22,8 +40,9 @@ interface Product {
   category_id: number;
   category_name: string;
   images: ProductImage[];
+  colors: ProductColor[];
+  materials: ProductMaterial[];
 }
-
 export default function ProductDetailPage({
   params,
 }: {
@@ -112,25 +131,27 @@ export default function ProductDetailPage({
 
             {/* รูปเพิ่มเติม */}
             {product.images && product.images.length > 1 && (
-              <div className="mt-4 grid grid-cols-4 gap-3">
-                {product.images.map((image) => (
-                  <button
-                    key={image.id}
-                    type="button"
-                    onClick={() => setSelectedImage(image)}
-                    className={`aspect-square overflow-hidden rounded-lg border-2 bg-gray-100 ${
-                      selectedImage?.id === image.id
-                        ? "border-[#252522]"
-                        : "border-transparent"
-                    }`}
-                  >
-                    <img
-                      src={image.image_url}
-                      alt={product.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                ))}
+              <div className="mt-4 overflow-x-auto pb-2">
+                <div className="flex gap-3">
+                  {product.images.map((image) => (
+                    <button
+                      key={image.id}
+                      type="button"
+                      onClick={() => setSelectedImage(image)}
+                      className={`h-35 w-35 shrink-0 overflow-hidden rounded-lg border-2 bg-gray-100 ${
+                        selectedImage?.id === image.id
+                          ? "border-[#252522]"
+                          : "border-transparent"
+                      }`}
+                    >
+                      <img
+                        src={image.image_url}
+                        alt={product.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -143,9 +164,13 @@ export default function ProductDetailPage({
             </p>
 
             {/* Name */}
-            <h1 className="mt-2 text-4xl font-bold text-[#252522]">
-              {product.name}
-            </h1>
+            <div className="mt-2 flex items-center justify-between gap-4">
+              <h1 className="text-4xl font-bold text-[#252522]">
+                {product.name}
+              </h1>
+
+              <WishlistButton productId={product.id} />
+            </div>
 
             {/* Price */}
             <div className="mt-6">
@@ -179,15 +204,102 @@ export default function ProductDetailPage({
               </p>
             </div>
 
-            {/* Contact */}
-            <a
-              href="#contact"
-              className="mt-8 block w-full rounded-xl bg-[#252522] py-3 text-center font-semibold text-white transition hover:bg-[#5d4533]"
-            >
-              สอบถามรายละเอียด / ขอประเมินราคา
-            </a>
+            {/* Custom information */}
+            <div className="mt-6 rounded-2xl bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-[#252522]">
+                ข้อมูลที่ลูกค้าควรเตรียม
+              </h2>
+
+              <p className="mt-2 text-sm text-gray-500">
+                เพื่อให้ทีมงานประเมินราคาได้แม่นยำขึ้น
+              </p>
+
+              <div className="mt-5 space-y-4">
+                {/* Item */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-sm text-[#7a5c43]">
+                    ✓
+                  </div>
+
+                  <span className="text-sm text-gray-700">
+                    ขนาดพื้นที่โดยประมาณ
+                  </span>
+                </div>
+
+                {/* Item */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-sm text-[#7a5c43]">
+                    ✓
+                  </div>
+
+                  <span className="text-sm text-gray-700">รูปพื้นที่จริง</span>
+                </div>
+
+                {/* Item */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-sm text-[#7a5c43]">
+                    ✓
+                  </div>
+
+                  <span className="text-sm text-gray-700">
+                    สไตล์ / สีที่ต้องการ
+                  </span>
+                </div>
+
+                {/* Item */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-sm text-[#7a5c43]">
+                    ✓
+                  </div>
+
+                  <span className="text-sm text-gray-700">
+                    วัสดุที่สนใจ (ถ้ามี)
+                  </span>
+                </div>
+
+                {/* Item */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-sm text-[#7a5c43]">
+                    ✓
+                  </div>
+
+                  <span className="text-sm text-gray-700">
+                    งบประมาณโดยประมาณ
+                  </span>
+                </div>
+
+                {/* Item */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-gray-300 text-sm text-[#7a5c43]">
+                    ✓
+                  </div>
+
+                  <span className="text-sm text-gray-700">
+                    รายละเอียดเพิ่มเติม (ถ้ามี)
+                  </span>
+                </div>
+              </div>
+
+              {/* Contact Button */}
+              <a
+                href="#contact"
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-black py-3.5 font-semibold text-white transition hover:bg-[#5d371d]"
+              >
+                ส่งรูปพื้นที่ / สอบถามทีมงาน
+              </a>
+            </div>
           </div>
         </div>
+        {/* วัสดุและสี */}
+        <Materials_colors
+          colors={product.colors}
+          materials={product.materials}
+        />
+        {/* สินค้าแนะนำ */}
+        <RecommendedProducts
+          currentProductId={product.id}
+          categoryId={product.category_id}
+        />
       </div>
     </section>
   );

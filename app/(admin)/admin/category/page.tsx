@@ -155,11 +155,11 @@ export default function CategoryPage() {
 
                 <td className="p-4 font-medium">{category.name}</td>
 
-                <td className="p-4 text-gray-500">{category.description}</td>
+                <td className="p-4 text-gray-500">{category.description || "-"}</td>
 
                 <td className="p-4">
                   <div className="flex justify-center gap-3">
-                    <button
+                    <button 
                       onClick={() => handleEdit(category)}
                       className="px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-500 text-white"
                     >

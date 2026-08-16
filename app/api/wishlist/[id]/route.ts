@@ -3,10 +3,12 @@ import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
 import pool from "@/lib/db";
 
-export async function GET() {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const cookieStore = await cookies();
-
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
@@ -18,29 +20,39 @@ export async function GET() {
 
     const payload = await verifyToken(token);
 
+    const { id } = await params;
+
+    console.log("DELETE wishlist:", {
+      userId: payload.id,
+      productId: id,
+    });
+
     const result = await pool.query(
-      `SELECT id, username, email, role, profile_image
-       FROM users
-       WHERE id = $1`,
-      [payload.id]
+      `
+      DELETE FROM wishlists
+      WHERE user_id = $1
+      AND product_id = $2
+      RETURNING *
+      `,
+      [payload.id, id]
     );
 
     if (result.rows.length === 0) {
       return NextResponse.json(
-        { message: "ไม่พบผู้ใช้" },
+        { message: "ไม่พบสินค้าใน Wishlist" },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
-      user: result.rows[0],
+      message: "ลบ Wishlist สำเร็จ",
     });
   } catch (error) {
-    console.error(error);
+    console.error("DELETE wishlist error:", error);
 
     return NextResponse.json(
-      { message: "Unauthorized" },
-      { status: 401 }
+      { message: "เกิดข้อผิดพลาด" },
+      { status: 500 }
     );
   }
 }

@@ -1,12 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
 
 type User = {
   id: number;
   username: string;
   email: string;
   role: string;
+  profile_image: string | null;
 };
 
 type AuthContextType = {
@@ -22,6 +24,21 @@ export function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    async function getProfile() {
+      try {
+        const response = await axios.get("/api/user/profile");
+
+        setUser(response.data.user);
+      } catch (error) {
+        console.log("ยังไม่ได้เข้าสู่ระบบ");
+        setUser(null);
+      }
+    }
+
+    getProfile();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

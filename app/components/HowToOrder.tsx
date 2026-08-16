@@ -34,7 +34,7 @@ const steps = [
 
 export default function HowToOrder() {
   return (
-    <section className="bg-[#faf9f6] py-10">
+    <section id="how-to-order" className="bg-[#faf9f6] py-10">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Header */}

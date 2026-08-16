@@ -12,7 +12,6 @@ import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -31,7 +30,7 @@ export default function Navbar() {
     };
   }, []);
 
-    async function handleLogout() {
+  async function handleLogout() {
     try {
       const response = await axios.post("/api/user/logout");
       setUser(null);
@@ -75,13 +74,26 @@ export default function Navbar() {
             className="flex items-center gap-3 cursor-pointer select-none"
           >
             <div className="hidden md:block text-right">
-              <p className="text-sm font-semibold">Admin</p>
-              <p className="text-xs text-gray-500">Administrator</p>
+              <p className="text-sm font-semibold">
+                {user?.username || "Admin"}
+              </p>
+
+              <p className="text-xs text-gray-500">
+                {user?.role || "Administrator"}
+              </p>
             </div>
 
-            <button className="w-10 h-10">
-              <IoPersonCircle className="w-full h-full text-gray-500" />
-            </button>
+            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-300">
+              {user?.profile_image ? (
+                <img
+                  src={user.profile_image}
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <IoPersonCircle className="w-full h-full text-gray-500" />
+              )}
+            </div>
 
             <FiChevronDown
               className={`text-gray-500 transition-transform duration-200 ${
@@ -104,11 +116,11 @@ export default function Navbar() {
                 className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
                 onClick={() => setIsOpen(false)}
               >
-                <IoPerson size={20} />  
+                <IoPerson size={20} />
                 บัญชี
               </Link>
 
-              <hr className="text-gray-300"/>
+              <hr className="text-gray-300" />
 
               <button
                 onClick={() => {

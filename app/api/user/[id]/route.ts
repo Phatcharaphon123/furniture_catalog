@@ -25,8 +25,9 @@ export async function GET(
       message: "ดึงข้อมูลผู้ใช้สำเร็จ",
       user: result.rows[0],
     });
-
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       { message: "Database Error" },
       { status: 500 }
@@ -34,21 +35,57 @@ export async function GET(
   }
 }
 
-// แก้ไขผู้ใช้
+// อัปเดตผู้ใช้
 export async function PUT(
   request: Request,
-    { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const body = await request.json();
-  const { username, email, role } = body;
+
   try {
+    const body = await request.json();
+
+    const {
+      username,
+      email,
+      role,
+      profile_image,
+      profile_image_public_id,
+    } = body;
+
     const result = await pool.query(
-      "UPDATE users SET username = $1, email = $2, role = $3 WHERE id = $4 RETURNING *",
-      [username, email, role, id]
+      `UPDATE users
+       SET username = $1,
+           email = $2,
+           role = $3,
+           profile_image = $4,
+           profile_image_public_id = $5
+       WHERE id = $6
+       RETURNING *`,
+      [
+        username,
+        email,
+        role,
+        profile_image,
+        profile_image_public_id,
+        id,
+      ]
     );
-    return NextResponse.json({ message: "อัปเดตข้อมูลสำเร็จ", user: result.rows[0] });
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { message: "ไม่พบผู้ใช้" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      message: "อัปเดตข้อมูลสำเร็จ",
+      user: result.rows[0],
+    });
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       { message: "Database Error" },
       { status: 500 }
@@ -62,9 +99,10 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { is_active } = await request.json();
 
   try {
+    const { is_active } = await request.json();
+
     const result = await pool.query(
       `UPDATE users
        SET is_active = $1
@@ -87,7 +125,7 @@ export async function PATCH(
       user: result.rows[0],
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       { message: "Database Error" },

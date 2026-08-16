@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -17,19 +17,6 @@ import { toast } from "react-toastify";
 function Navbar() {
   const { user, setUser } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    async function getProfile() {
-      try {
-        const response = await axios.get("/api/user/profile");
-        setUser(response.data.user);
-      } catch (error) {
-        setUser(null);
-      }
-    }
-
-    getProfile();
-  }, [setUser]);
 
   async function handleLogout() {
     try {
@@ -48,7 +35,6 @@ function Navbar() {
   return (
     <div className="sticky top-0 z-50 border-b border-[#e8e5df] bg-[#faf9f6]/95 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-6 flex h-16 items-center justify-between gap-4 md:h-20">
-
         {/* Logo */}
         <Link href="/" className="font-extrabold tracking-[0.06em]">
           <div>KITCHEN STUDIO</div>
@@ -60,41 +46,31 @@ function Navbar() {
 
         {/* Menu */}
         <nav className="hidden items-center gap-5 text-sm text-[#555] md:flex">
-          <Link
-            href="/shop"
-            className="transition hover:text-[#252522]"
-          >
+          <Link href="/shop" className="transition hover:text-[#252522]">
             สินค้า
           </Link>
 
-          <Link
-            href="/projects"
-            className="transition hover:text-[#252522]"
-          >
+          <Link href="/projects" className="transition hover:text-[#252522]">
             ผลงาน
           </Link>
 
           <Link
-            href="/how-to-order"
+            href="/#how-to-order"
             className="transition hover:text-[#252522]"
           >
             วิธีสั่งทำ
           </Link>
 
-          <Link
-            href="/contact"
-            className="transition hover:text-[#252522]"
-          >
+          <Link href="/#contact" className="transition hover:text-[#252522]">
             ติดต่อ
           </Link>
         </nav>
 
         {/* Right menu */}
         <div className="flex items-center gap-4">
-
           {/* Wishlist */}
           <Link
-            href="/wishlist"
+            href="/user/wishlist"
             className="transition hover:text-[#7a5c43]"
           >
             <FaRegHeart size={21} />
@@ -102,22 +78,27 @@ function Navbar() {
 
           {/* Account */}
           <div className="relative group">
-
             {user ? (
               <>
                 <div className="flex cursor-pointer items-center gap-2">
-                  <IoPersonCircle size={29} />
+                  <div className="h-9 w-9 overflow-hidden rounded-full border border-[#e8e5df] bg-gray-100">
+                    {user.profile_image ? (
+                      <img
+                        src={user.profile_image}
+                        alt="Profile"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <IoPersonCircle className="h-full w-full text-gray-400" />
+                    )}
+                  </div>
 
-                  <span className="hidden text-sm sm:block">
-                    {user.username}
-                  </span>
+                  <span className="text-sm font-semibold">{user.username}</span>
                 </div>
 
                 {/* Dropdown */}
                 <div className="invisible absolute right-0 top-full w-56 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-
                   <div className="overflow-hidden rounded-xl border border-[#e8e5df] bg-white shadow-lg">
-
                     <Link
                       href="/profile"
                       className="block px-4 py-3 text-sm transition hover:bg-[#f5f1ec]"
@@ -134,7 +115,6 @@ function Navbar() {
                       <BiExit size={18} className="mr-2 inline" />
                       ออกจากระบบ
                     </button>
-
                   </div>
                 </div>
               </>
@@ -147,7 +127,6 @@ function Navbar() {
                 Sign in
               </Link>
             )}
-
           </div>
         </div>
       </div>
@@ -156,4 +135,3 @@ function Navbar() {
 }
 
 export default Navbar;
-

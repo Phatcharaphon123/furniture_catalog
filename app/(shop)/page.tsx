@@ -5,6 +5,7 @@ import ProductSection from "../components/ProductSection";
 import ProjectSection from "../components/ProjectSection";
 import HowToOrder from "../components/HowToOrder";
 import ContactSection from "../components/ContactSection";
+import Question from "../components/Question";
 
 export default function ShopPage() {
   return (
@@ -14,6 +15,7 @@ export default function ShopPage() {
       <ProductSection />
       <ProjectSection />
       <HowToOrder />
+      <Question />
       <ContactSection />
     </main>
   );
