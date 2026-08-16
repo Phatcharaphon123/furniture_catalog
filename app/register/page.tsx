@@ -17,7 +17,7 @@ function RegisterPage() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const response = await axios.post("/api/user", {
+      const response = await axios.post("/api/user/register", {
         username,
         email,
         password,
